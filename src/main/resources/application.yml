@@ -7,3 +7,9 @@ spring:
     url: ${PAMADREGDB_URL}
     username: ${PAMADREGDB_USER}
     password: ${PAMADREGDB_PASSWORD}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: ["prometheus"]

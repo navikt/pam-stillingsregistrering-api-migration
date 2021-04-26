@@ -6,13 +6,13 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-@RequestMapping("/internal")
+@RequestMapping
 class StatusController {
 
-    @GetMapping("isReady")
+    @GetMapping("/isready")
     fun isReady() = ResponseEntity.ok("OK")
 
-    @GetMapping("isAlive")
+    @GetMapping("/isalive")
     fun isHealthy() = ResponseEntity.ok("OK")
 
 }
