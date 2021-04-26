@@ -1,0 +1,9 @@
+spring:
+  application:
+    name: pam-stillingsregistrering-api-migration
+  main:
+    banner-mode: off
+  datasource:
+    url: ${PAMADREGDB_URL}
+    username: ${PAMADREGDB_USER}
+    password: ${PAMADREGDB_PASSWORD}
