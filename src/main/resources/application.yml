@@ -4,9 +4,12 @@ spring:
   main:
     banner-mode: off
   datasource:
-    url: ${PAMADREGDB_URL}
-    username: ${PAMADREGDB_USER}
+    url: jdbc:postgresql://${PAMADREGDB_HOST}:${PAMADREGDB_PORT}/${PAMADREGDB_DATABASE}
+    username: ${PAMADREGDB_USERNAME}
     password: ${PAMADREGDB_PASSWORD}
+    hikari:
+      minimum-idle: 1
+      maximum-pool-size: 4
 
 management:
   endpoints:

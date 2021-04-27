@@ -36,6 +36,7 @@ spec:
     {{/each}}
   gcp:
     sqlInstances:
-    - type: POSTGRES_13
+    - type: POSTGRES_12
       databases:
-        name: pam-stillingsregistrering-api-db
+        - name: pam-stillingsregistrering-api
+          envVarPrefix: PAMADREGDB
