@@ -1,7 +1,7 @@
 apiVersion: "nais.io/v1alpha1"
 kind: "Application"
 metadata:
-  name: pam-stillingsregistrering-api-migration
+  name: pam-stillingsregistrering-api
   namespace: teampam
   labels:
     team: teampam
