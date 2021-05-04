@@ -1,7 +1,6 @@
 package no.nav.pam.adreg.migration.replication
 
 import net.javacrumbs.shedlock.spring.annotation.SchedulerLock
-import no.nav.pam.feed.client.FeedConnector
 import no.nav.pam.feed.taskscheduler.FeedTaskService
 import org.slf4j.LoggerFactory
 import org.springframework.scheduling.annotation.Scheduled
@@ -31,9 +30,11 @@ class AnnonseReplicationTask(
 
         log.info("Execute update batch, updateSince = ${updatedSince}")
 
-        val latestTimestampInBatch = annonseReplicationService.processUpdatesSince(updatedSince)
+        val latestTimestampInBatch = annonseReplicationService.processUpdateBatchSince(updatedSince)
 
         feedtaskService.save(TASKID, latestTimestampInBatch)
+
+        log.info("Update batch finished, latest updated = ${latestTimestampInBatch}")
     }
 
     @Scheduled(cron = "30 */10 * * * *")

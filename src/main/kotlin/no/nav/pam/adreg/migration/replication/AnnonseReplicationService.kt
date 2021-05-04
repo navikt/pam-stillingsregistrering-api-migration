@@ -32,7 +32,7 @@ class AnnonseReplicationService(
      * Replicate a batch of annonser updates since provided time.
      * @return updated time of the latest updated annonse
      */
-    fun processUpdatesSince(since: LocalDateTime): LocalDateTime? {
+    fun processUpdateBatchSince(since: LocalDateTime): LocalDateTime? {
 
         val updatedAnnonser: List<AnnonseReplicationDto> =
             feedConnector.fetchContentList(migrationApiBaseurl+"/feed", since, AnnonseReplicationDto::class.java)
@@ -48,7 +48,7 @@ class AnnonseReplicationService(
      * Finds and deletes annonser from local repository that have vanished from source.
      * @return total number of deleted
      */
-    fun processDeletes(): Int {
+    fun processAllDeletes(): Int {
         val deleted: MutableSet<Long> = mutableSetOf()
         var page = annonseStorageService.findAll(PageRequest.of(0, 200, Sort.by("id")))
 
