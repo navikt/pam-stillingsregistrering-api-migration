@@ -42,7 +42,7 @@ class AnnonseReplicationTask(
     fun executeDeleteBatch() {
         log.info("Execute delete batch")
 
-        val n = annonseReplicationService.processDeletes()
+        val n = annonseReplicationService.processAllDeletes()
 
         log.info("Deleted ${n} annonser from local repository")
     }
