@@ -13,7 +13,7 @@ data class AnnonseReplicationDto(
     val overskrift: String?,
     val soknadsfrist: String?,
     val arbeidsgiver: String?,
-    val orgnr: String,
+    val orgnr: String?,
     val publiserFra: LocalDate?,
     val sistePubliseringsDato: LocalDate?,
     val antallStillinger: Int?,

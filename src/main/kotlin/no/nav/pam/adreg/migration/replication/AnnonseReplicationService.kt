@@ -39,10 +39,20 @@ class AnnonseReplicationService(
 
         log.info("${updatedAnnonser.size} annonser updated or created since ${since}")
 
-        annonseStorageService.updateOrCreateAll(updatedAnnonser.map { it.toAnnonnse() })
+        annonseStorageService.updateOrCreateAll(updatedAnnonser.discardInvalid().map { it.toAnnonnse() })
 
         return updatedAnnonser.maxByOrNull { it.updated }?.updated?.toLocalDateTime()
     }
+
+    // Annonser which are invalid and should not be kept for the future
+    private fun List<AnnonseReplicationDto>.discardInvalid(): List<AnnonseReplicationDto> =
+        filter {
+            if (it.orgnr == null) {
+                log.warn("Incoming annonse without orgnr will be skipped for replication: id=${it.id}, uuid=${it.uuid}")
+                return@filter false
+            }
+            return@filter true
+        }
 
     /**
      * Finds and deletes annonser from local repository that have vanished from source.

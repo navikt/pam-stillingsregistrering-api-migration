@@ -48,12 +48,16 @@ class AnnonseStorageService(val annonseRepository: AnnonseRepository,
         if (id == null || uuid == null) {
             throw IllegalArgumentException("Incoming annonse without id/uuid")
         }
+        if (orgnr == null) {
+            throw IllegalArgumentException("Incoming annonse without orgnr is invalid (employer ownership missing)")
+        }
         if (existingAnnonse != null && id != existingAnnonse.id) {
             throw IllegalArgumentException("Annonse id mismatch")
         }
         if (existingAnnonse != null && uuid != existingAnnonse.uuid) {
             throw IllegalArgumentException("Annonse UUID mismatch, id=${id}")
         }
+
         return this
     }
 
