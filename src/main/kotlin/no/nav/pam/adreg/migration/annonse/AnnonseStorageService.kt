@@ -57,7 +57,8 @@ class AnnonseStorageService(val annonseRepository: AnnonseRepository,
         return this
     }
 
-    fun updateAnnonseSequence(): Long {
+    @Transactional
+    internal fun updateAnnonseSequence(): Long {
         entityManager.flush()
 
         val currentMax = entityManager.createNativeQuery("SELECT MAX(id) FROM annonse").singleResult as Number?

@@ -3,3 +3,7 @@ spring:
     url: jdbc:h2:mem:testdb;MODE=PostgreSQL
     username:
     password:
+
+migration:
+  api:
+    baseurl: http://localhost:9003/stillingsregistrering-api/internal/migration/feed
