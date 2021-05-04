@@ -1,4 +1,4 @@
 ingresses:
 - "https://pam-stillingsregistrering-api.intern.nav.no"
 
-pamadreg_migration_api_url: https://pam-stillingsregistrering-api.nais.oera.no/internal/migration
+pamadreg_migration_api_url: https://pam-stillingsregistrering-api.prod-sbs.nais.io/stillingsregistrering-api/internal/migration
