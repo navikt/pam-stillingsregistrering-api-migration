@@ -9,10 +9,16 @@ spring:
     password: ${PAMADREGDB_PASSWORD}
     hikari:
       minimum-idle: 1
-      maximum-pool-size: 4
+      maximum-pool-size: 5
 
 management:
   endpoints:
     web:
       exposure:
         include: ["prometheus"]
+
+migration:
+  api:
+    baseurl: ${PAMADREG_MIGRATION_API_URL}
+feed:
+  pagesize: 200

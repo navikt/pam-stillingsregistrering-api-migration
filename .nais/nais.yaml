@@ -25,15 +25,19 @@ spec:
     enabled: true
     path: /actuator/prometheus
   limits:
-    cpu: 500m
+    cpu: 1
     memory: 1024Mi
   requests:
-    cpu: 200m
+    cpu: 500m
     memory: 512Mi
-  ingresses: 
+  ingresses:
     {{#each ingresses as |url|}}
       - {{url}}
     {{/each}}
+  env:
+    - name: PAMADREG_MIGRATION_API_URL
+      value: {{pamadreg_migration_api_url}}
+
   gcp:
     sqlInstances:
     - type: POSTGRES_12

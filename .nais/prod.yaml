@@ -1,2 +1,4 @@
 ingresses:
 - "https://pam-stillingsregistrering-api.intern.nav.no"
+
+pamadreg_migration_api_url: https://pam-stillingsregistrering-api.nais.oera.no/internal/migration

@@ -1,5 +1,6 @@
 package no.nav.pam.adreg.migration.annonse
 
+import java.time.LocalDate
 import java.time.LocalDateTime
 import javax.persistence.*
 
@@ -29,8 +30,10 @@ class Annonse {
 
     var updated: LocalDateTime? = null
     var created: LocalDateTime? = null
-    var validUntil: LocalDateTime? = null
-    var publishAt: LocalDateTime? = null
+    var validUntil: LocalDate? = null
+    var publishAt: LocalDate? = null
+
+    var antallStillinger: Int? = null
 
     @ElementCollection(fetch = FetchType.EAGER)
     @MapKeyColumn(name = "property_key")

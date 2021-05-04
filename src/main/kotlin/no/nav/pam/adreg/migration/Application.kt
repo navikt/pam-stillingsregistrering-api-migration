@@ -15,12 +15,12 @@ import java.net.Socket
 import java.time.LocalDateTime
 import java.util.*
 
-@SpringBootApplication
+@SpringBootApplication(scanBasePackageClasses = [Application::class], scanBasePackages = ["no.nav.pam.feed"])
 class Application
 
 fun main(args: Array<String>) {
 	// Delay startup until db port can be connected to (wait for cloud sql proxy)
-	val dbHost = System.getenv("PAMADREGDB_HOST")?:throw RuntimeException("Missing environment variable PAMADREGDB_HOST")
+	val dbHost = System.getenv("PAMADREGDB_HOST")?:throw IllegalStateException("Missing environment variable PAMADREGDB_HOST")
 	val dbPort = Integer.parseInt(System.getenv("PAMADREGDB_PORT"))
 
 	println("Waiting for database port at ${dbHost}:${dbPort} to become connectable ..")
@@ -67,8 +67,6 @@ class DbTestingConfig(val aservice: AnnonseStorageService): ApplicationRunner {
 
 		println("Saved a test annonse")
 		println(annonse)
-
-		aservice.updateAnnonseSequence()
 	}
 
 }
