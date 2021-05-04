@@ -36,4 +36,18 @@ class AnnonseStorageServiceIT {
 		replicatedAds.forEach { annonseStorageService.delete(it) }
 	}
 
+	@Test
+	fun `repository counts`() {
+		annonseStorageService.updateOrCreateAll(listOf(
+			Annonse().apply { id = 1000; uuid = UUID.randomUUID().toString(); updated = LocalDateTime.now(); created = updated; orgnr = "900000000" },
+			Annonse().apply { id = 2000; uuid = UUID.randomUUID().toString(); updated = LocalDateTime.now(); created = updated; orgnr = "900000000" }
+		))
+
+		val counts = annonseStorageService.getRepositoryCounts()
+
+		assertEquals(2, counts.total)
+		assertEquals(1, counts.distinctOrgnr)
+		assertEquals(2, counts.statusCounts[Status.PAABEGYNT.name])
+	}
+
 }

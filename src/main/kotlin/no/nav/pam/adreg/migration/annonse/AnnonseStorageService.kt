@@ -44,6 +44,15 @@ class AnnonseStorageService(val annonseRepository: AnnonseRepository,
         return UpdateResult(saved.size - created, created)
     }
 
+    @Transactional(readOnly = true)
+    fun getRepositoryCounts() = RepositoryCounts(
+        annonseRepository.count(),
+        annonseRepository.countDistinctOrgnr(),
+        annonseRepository.numberByStatus().map {
+            it.status.name to it.count
+        }.toMap()
+    )
+
     private fun Annonse.validateAndMerge(existingAnnonse: Annonse?): Annonse {
         if (id == null || uuid == null) {
             throw IllegalArgumentException("Incoming annonse without id/uuid")
@@ -74,10 +83,15 @@ class AnnonseStorageService(val annonseRepository: AnnonseRepository,
         return nextVal
     }
 
-
 }
 
 data class UpdateResult (
     val updated: Int,
     val created: Int,
+)
+
+data class RepositoryCounts (
+    val total: Long,
+    val distinctOrgnr: Long,
+    val statusCounts: Map<String, Long>
 )

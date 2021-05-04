@@ -2,6 +2,7 @@ package no.nav.pam.adreg.migration.replication
 
 import no.nav.pam.adreg.migration.annonse.Annonse
 import no.nav.pam.adreg.migration.annonse.AnnonseStorageService
+import no.nav.pam.adreg.migration.annonse.RepositoryCounts
 import no.nav.pam.feed.client.FeedConnector
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
@@ -79,6 +80,8 @@ class AnnonseReplicationService(
 
         return deleted.size
     }
+
+    fun getRepositoryCounts(): RepositoryCounts = annonseStorageService.getRepositoryCounts()
 
     private fun fetchDeletedFromSource(annonser: List<Annonse>): Set<Long> {
         val uri = UriComponentsBuilder.fromUriString(migrationApiBaseurl).pathSegment("exists")

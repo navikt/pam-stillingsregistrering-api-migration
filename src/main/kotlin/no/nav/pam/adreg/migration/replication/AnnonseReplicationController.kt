@@ -1,13 +1,16 @@
 package no.nav.pam.adreg.migration.replication
 
+import no.nav.pam.adreg.migration.annonse.RepositoryCounts
 import org.slf4j.LoggerFactory
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
+import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import java.time.LocalDateTime
 import java.time.Month
+
 
 @RestController
 @RequestMapping("/replication")
@@ -42,5 +45,12 @@ class AnnonseReplicationController(
 
         return ResponseEntity.ok(mapOf("result" to "success", "deleteCount" to n))
     }
+
+    /**
+     * Returns some handy checksums from annonse repository in a JSON payload.
+     * @return
+     */
+    @GetMapping("/counts", produces = [MediaType.APPLICATION_JSON_VALUE])
+    fun counts(): ResponseEntity<RepositoryCounts> = ResponseEntity.ok(annonseReplicationService.getRepositoryCounts())
 
 }
