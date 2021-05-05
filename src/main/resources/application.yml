@@ -21,6 +21,6 @@ migration:
   api:
     baseurl: ${PAMADREG_MIGRATION_API_URL}
   scheduler:
-    enabled: true
+    enabled: false
 feed:
   pagesize: 200
