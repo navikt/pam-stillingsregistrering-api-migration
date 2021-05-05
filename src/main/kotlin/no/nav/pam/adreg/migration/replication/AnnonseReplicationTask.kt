@@ -3,12 +3,14 @@ package no.nav.pam.adreg.migration.replication
 import net.javacrumbs.shedlock.spring.annotation.SchedulerLock
 import no.nav.pam.feed.taskscheduler.FeedTaskService
 import org.slf4j.LoggerFactory
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Component
 import java.time.LocalDateTime
 import java.time.Month
 
 @Component
+@ConditionalOnProperty(name = ["migration.scheduler.enabled"], matchIfMissing = true)
 class AnnonseReplicationTask(
     val feedtaskService: FeedTaskService,
     val annonseReplicationService: AnnonseReplicationService
