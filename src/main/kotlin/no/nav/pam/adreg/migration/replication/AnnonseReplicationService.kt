@@ -42,6 +42,10 @@ class AnnonseReplicationService(
 
         annonseStorageService.updateOrCreateAll(updatedAnnonser.discardInvalid().map { it.toAnnonnse() })
 
+        if (updatedAnnonser.isNotEmpty()) {
+            log.info("Updated timestamp of last element in feed batch: ${updatedAnnonser.last().updated}, local date time = ${updatedAnnonser.last().updated.toLocalDateTime()}")
+        }
+
         return updatedAnnonser.maxByOrNull { it.updated }?.updated?.toLocalDateTime()
     }
 
