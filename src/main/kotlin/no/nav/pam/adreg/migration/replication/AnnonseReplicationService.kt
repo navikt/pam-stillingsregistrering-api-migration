@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service
 import org.springframework.web.client.RestTemplate
 import org.springframework.web.util.UriComponentsBuilder
 import java.time.LocalDateTime
+import java.time.ZoneId
 
 /**
  * Service for processing batches of annonse updates
@@ -40,13 +41,12 @@ class AnnonseReplicationService(
 
         log.info("${updatedAnnonser.size} annonser updated or created since ${since}")
 
-        annonseStorageService.updateOrCreateAll(updatedAnnonser.discardInvalid().map { it.toAnnonnse() })
+        val updateResult =
+            annonseStorageService.updateOrCreateAll(updatedAnnonser.discardInvalid().map { it.toAnnonnse() })
 
-        if (updatedAnnonser.isNotEmpty()) {
-            log.info("Updated timestamp of last element in feed batch: ${updatedAnnonser.last().updated}, local date time = ${updatedAnnonser.last().updated.toLocalDateTime()}")
-        }
+        log.info("Updated ${updateResult.updated} annonser, created ${updateResult.created} annonser")
 
-        return updatedAnnonser.maxByOrNull { it.updated }?.updated?.toLocalDateTime()
+        return updatedAnnonser.maxByOrNull { it.updated }?.updated?.withZoneSameInstant(ZoneId.systemDefault())?.toLocalDateTime()
     }
 
     // Annonser which are invalid and should not be kept for the future

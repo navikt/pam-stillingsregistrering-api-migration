@@ -3,6 +3,7 @@ package no.nav.pam.adreg.migration.replication
 import no.nav.pam.adreg.migration.annonse.Annonse
 import no.nav.pam.adreg.migration.annonse.Status
 import java.time.LocalDate
+import java.time.ZoneId
 import java.time.ZonedDateTime
 
 data class AnnonseReplicationDto(
@@ -25,8 +26,8 @@ data class AnnonseReplicationDto(
     internal fun toAnnonnse() = Annonse().also {
         it.id = id
         it.uuid = uuid
-        it.updated = updated.toLocalDateTime()
-        it.created = created.toLocalDateTime()
+        it.updated = updated.withZoneSameInstant(ZoneId.systemDefault()).toLocalDateTime()
+        it.created = created.withZoneSameInstant(ZoneId.systemDefault()).toLocalDateTime()
         it.overskrift = overskrift
         it.soknadsfrist = soknadsfrist
         it.arbeidsgiver = arbeidsgiver
