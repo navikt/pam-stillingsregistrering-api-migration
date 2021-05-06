@@ -23,4 +23,4 @@ migration:
   scheduler:
     enabled: true
 feed:
-  pagesize: 200
+  pagesize: 300
