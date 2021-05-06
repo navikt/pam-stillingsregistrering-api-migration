@@ -41,6 +41,9 @@ spec:
   gcp:
     sqlInstances:
     - type: POSTGRES_12
+      tier: {{cloudsql_db_tier}}
+      diskSize: {{cloudsql_db_disksize}}
+      diskAutoresize: true
       databases:
         - name: pam-stillingsregistrering-api
           envVarPrefix: PAMADREGDB
