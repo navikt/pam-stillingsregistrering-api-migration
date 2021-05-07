@@ -39,7 +39,7 @@ class AnnonseReplicationTask(
         log.info("Update batch finished, latest updated = ${latestTimestampInBatch}")
     }
 
-    @Scheduled(cron = "30 */10 * * * *")
+    @Scheduled(cron = "30 */30 * * * *")
     @SchedulerLock(name = TASKID, lockAtLeastFor = "PT15S", lockAtMostFor = "PT30M")
     fun executeDeleteBatch() {
         log.info("Execute delete batch")
