@@ -48,9 +48,10 @@ class AnnonseStorageService(val annonseRepository: AnnonseRepository,
     fun getRepositoryCounts() = RepositoryCounts(
         annonseRepository.count(),
         annonseRepository.countDistinctOrgnr(),
-        annonseRepository.numberByStatus().map {
-            it.status.name to it.count
-        }.toMap()
+        annonseRepository.numberByStatus()
+            .sortedBy { it.count }
+            .map { it.status.name to it.count }
+            .toMap(LinkedHashMap())
     )
 
     private fun Annonse.validateAndMerge(existingAnnonse: Annonse?): Annonse {
