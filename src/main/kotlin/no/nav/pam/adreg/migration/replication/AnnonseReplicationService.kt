@@ -32,7 +32,7 @@ class AnnonseReplicationService(
 
     /**
      * Replicate a batch of annonser updates since provided time.
-     * @return updated time of the latest updated annonse
+     * @return updated time of the latest updated annonse, or <code>null</code> in case of no updates since provided timestamp
      */
     fun processUpdateBatchSince(since: LocalDateTime): LocalDateTime? {
 

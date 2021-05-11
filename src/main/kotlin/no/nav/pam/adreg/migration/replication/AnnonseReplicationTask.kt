@@ -27,16 +27,16 @@ class AnnonseReplicationTask(
     @SchedulerLock(name = TASKID, lockAtLeastFor = "PT15S", lockAtMostFor = "PT5M")
     fun executeUpdateBatch() {
 
-        val updatedSince = feedtaskService.fetchLastRunDateForJob(TASKID).orElse(
+        val updatedSince: LocalDateTime = feedtaskService.fetchLastRunDateForJob(TASKID).orElse(
             LocalDateTime.of(2013, Month.JUNE, 11, 8, 0))
 
         log.info("Execute update batch, updateSince = ${updatedSince}")
 
-        val latestTimestampInBatch = annonseReplicationService.processUpdateBatchSince(updatedSince)
+        val nextUpdatedTimestamp: LocalDateTime = annonseReplicationService.processUpdateBatchSince(updatedSince)?:updatedSince
 
-        feedtaskService.save(TASKID, latestTimestampInBatch)
+        feedtaskService.save(TASKID, nextUpdatedTimestamp)
 
-        log.info("Update batch finished, latest updated = ${latestTimestampInBatch}")
+        log.info("Update batch finished, latest updated = ${nextUpdatedTimestamp}")
     }
 
     @Scheduled(cron = "30 */30 * * * *")
