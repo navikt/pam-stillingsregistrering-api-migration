@@ -38,6 +38,11 @@ spec:
     - name: PAMADREG_MIGRATION_API_URL
       value: {{pamadreg_migration_api_url}}
 
+  accessPolicy:
+    outbound:
+      external:
+        - host: {{pamadreg_migration_api_host}}
+
   gcp:
     sqlInstances:
     - type: POSTGRES_12

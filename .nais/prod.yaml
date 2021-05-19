@@ -2,6 +2,7 @@ ingresses:
 - "https://pam-stillingsregistrering-api.intern.nav.no"
 
 pamadreg_migration_api_url: https://pam-stillingsregistrering-api.prod-sbs.nais.io/stillingsregistrering-api/internal/migration
+pamadreg_migration_api_host: pam-stillingsregistrering-api.prod-sbs.nais.io
 
 cloudsql_db_tier: db-custom-2-7680
 cloudsql_db_disksize: 20
