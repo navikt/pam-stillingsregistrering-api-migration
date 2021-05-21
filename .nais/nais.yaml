@@ -37,6 +37,9 @@ spec:
   env:
     - name: PAMADREG_MIGRATION_API_URL
       value: {{pamadreg_migration_api_url}}
+  filesFrom:
+    - secret: pam-stillingsregistrering-api-env
+      mountPath: /var/run/secrets/nais.io/vault
 
   accessPolicy:
     outbound:
