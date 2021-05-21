@@ -26,9 +26,6 @@ fun main(args: Array<String>) {
 	println("Waiting for database port at ${dbHost}:${dbPort} to become connectable ..")
 	waitForPort(dbHost, dbPort)
 
-	println("Value of test secret 1: ${System.getenv("TEST_SECRET")}")
-	println("Value of test secret 2: ${System.getenv("TEST_FOO")}")
-
 	runApplication<Application>(*args)
 }
 
