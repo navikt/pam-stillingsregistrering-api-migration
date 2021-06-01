@@ -4,5 +4,6 @@ ingresses:
 pamadreg_migration_api_url: https://pam-stillingsregistrering-api.dev-sbs.nais.io/stillingsregistrering-api/internal/migration
 pamadreg_migration_api_host: pam-stillingsregistrering-api.dev-sbs.nais.io
 
+
 cloudsql_db_tier: db-f1-micro
 cloudsql_db_disksize: 10
