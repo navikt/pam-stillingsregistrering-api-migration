@@ -68,6 +68,8 @@ class AnnonseReplicationService(
         var page = annonseStorageService.findAll(PageRequest.of(0, 200, Sort.by("id")))
 
         while (! page.isEmpty) {
+            log.info("processAllDeletes() at page ${page.number} ..")
+
             deleted.addAll(fetchDeletedFromSource(page.content))
             if (page.hasNext()) {
                 page = annonseStorageService.findAll(page.nextPageable())

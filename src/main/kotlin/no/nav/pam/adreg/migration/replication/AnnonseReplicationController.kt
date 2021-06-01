@@ -41,6 +41,8 @@ class AnnonseReplicationController(
     @PostMapping("delete", produces = [MediaType.APPLICATION_JSON_VALUE])
     fun executeDeletes(): ResponseEntity<Map<String,*>> {
 
+        log.info("Manual trigger of replication deletes processing received")
+
         val n = annonseReplicationService.processAllDeletes()
 
         return ResponseEntity.ok(mapOf("result" to "success", "deleteCount" to n))
