@@ -41,3 +41,20 @@ data class AnnonseReplicationDto(
     }
 
 }
+
+internal fun fromAnnonse(annonse: Annonse) = AnnonseReplicationDto(
+    annonse.id?:-1,
+    annonse.uuid?:"??",
+    annonse.updated?.atZone(ZoneId.systemDefault())?:ZonedDateTime.now(),
+    annonse.created?.atZone(ZoneId.systemDefault())?:ZonedDateTime.now(),
+    annonse.overskrift,
+    annonse.soknadsfrist,
+    annonse.arbeidsgiver,
+    annonse.orgnr,
+    annonse.publishAt,
+    annonse.validUntil,
+    annonse.antallStillinger,
+    annonse.toBeExported,
+    annonse.status.name,
+    annonse.properties
+)
