@@ -6,4 +6,4 @@ spring:
 
 migration:
   api:
-    baseurl: http://localhost:9003/stillingsregistrering-api/internal/migration/feed
+    baseurl: http://localhost:9003/stillingsregistrering-api/internal/migration
