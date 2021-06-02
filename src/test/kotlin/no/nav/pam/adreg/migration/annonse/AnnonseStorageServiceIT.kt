@@ -1,6 +1,7 @@
 package no.nav.pam.adreg.migration.annonse
 
 import no.nav.pam.adreg.migration.Application
+import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -21,6 +22,12 @@ class AnnonseStorageServiceIT {
 	@Autowired
 	private lateinit var annonseStorageService: AnnonseStorageService
 
+	@Autowired
+	private lateinit var annonseRepository: AnnonseRepository
+
+	@AfterEach
+	fun deleteAllAnnonser() = annonseRepository.deleteAll()
+
 	@Test
 	@Transactional(propagation = Propagation.NOT_SUPPORTED)
 	fun `sequence update`() {
@@ -32,8 +39,6 @@ class AnnonseStorageServiceIT {
 		replicatedAds = replicatedAds.map { annonseStorageService.save(it) }
 
 		assertEquals(2001L, annonseStorageService.updateAnnonseSequence())
-
-		replicatedAds.forEach { annonseStorageService.delete(it) }
 	}
 
 	@Test

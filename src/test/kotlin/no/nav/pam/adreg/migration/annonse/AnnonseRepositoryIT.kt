@@ -1,6 +1,7 @@
 package no.nav.pam.adreg.migration.annonse
 
 import no.nav.pam.adreg.migration.Application
+import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -27,6 +28,9 @@ class AnnonseRepositoryIT {
 
     @Autowired
     lateinit var annonseRepository: AnnonseRepository
+
+    @AfterEach
+    fun clearRepository() = annonseRepository.deleteAll()
 
     @Test
     fun `test save`() {
@@ -70,8 +74,6 @@ class AnnonseRepositoryIT {
 
         assertEquals("bar", annonseFromDb?.properties?.get("foo"))
         assertEquals("some property value", annonseFromDb?.properties?.get("baz"))
-
-        annonseFromDb?.let { annonseRepository.delete(it) }
     }
 
     @Test
@@ -87,7 +89,7 @@ class AnnonseRepositoryIT {
             }
         }
 
-        annonseRepository.saveAll(annonser)
+        val savedAll = annonseRepository.saveAll(annonser)
 
         var idPage = annonseRepository.findAllIds(PageRequest.of(0, 2, Sort.by("id")))
         assertEquals(3, idPage.totalElements)
