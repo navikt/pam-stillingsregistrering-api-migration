@@ -22,7 +22,7 @@ class AnnonseStorageService(val annonseRepository: AnnonseRepository,
     fun findById(id: Long): Annonse? = annonseRepository.findById(id).orElse(null)
 
     @Transactional(readOnly = true)
-    fun findAll(pageable: Pageable) = annonseRepository.findAll(pageable)
+    fun findAllIds(pageable: Pageable) = annonseRepository.findAllIds(pageable)
 
     @Transactional
     fun updateOrCreateAll(annonseList: List<Annonse>): UpdateResult {

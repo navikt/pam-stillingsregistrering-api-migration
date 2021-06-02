@@ -65,14 +65,14 @@ class AnnonseReplicationService(
      */
     fun processAllDeletes(): Int {
         val deleted: MutableSet<Long> = mutableSetOf()
-        var page = annonseStorageService.findAll(PageRequest.of(0, 200, Sort.by("id")))
+        var page = annonseStorageService.findAllIds(PageRequest.of(0, 200, Sort.by("id")))
 
         while (! page.isEmpty) {
             log.info("processAllDeletes() at page ${page.number} ..")
 
             deleted.addAll(fetchDeletedFromSource(page.content))
             if (page.hasNext()) {
-                page = annonseStorageService.findAll(page.nextPageable())
+                page = annonseStorageService.findAllIds(page.nextPageable())
             } else break
         }
 
@@ -89,17 +89,15 @@ class AnnonseReplicationService(
 
     fun getRepositoryCounts(): RepositoryCounts = annonseStorageService.getRepositoryCounts()
 
-    private fun fetchDeletedFromSource(annonser: List<Annonse>): Set<Long> {
+    private fun fetchDeletedFromSource(annonseIds: List<Long>): Set<Long> {
         val uri = UriComponentsBuilder.fromUriString(migrationApiBaseurl).pathSegment("exists")
 
         val response = restTemplate.exchange(uri.build().toUri(),
             HttpMethod.POST,
-            HttpEntity(annonser.toExistsCheckRequest()),
+            HttpEntity(annonseIds.map { AnnonseExistsDto(it) }),
             object : ParameterizedTypeReference<List<AnnonseExistsDto>>() {})
 
         return response.body!!.filter { it.exists == false }.map { it.id }.toSet()
     }
-
-    private fun List<Annonse>.toExistsCheckRequest() = map { AnnonseExistsDto(it.id!!) }
 
 }

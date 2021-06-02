@@ -7,6 +7,8 @@ import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
+import org.springframework.data.domain.PageRequest
+import org.springframework.data.domain.Sort
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.ContextConfiguration
 import org.springframework.test.context.junit.jupiter.SpringExtension
@@ -70,6 +72,30 @@ class AnnonseRepositoryIT {
         assertEquals("some property value", annonseFromDb?.properties?.get("baz"))
 
         annonseFromDb?.let { annonseRepository.delete(it) }
+    }
+
+    @Test
+    @Transactional(propagation = Propagation.NOT_SUPPORTED)
+    fun  `test findAllIds`() {
+        val annonser = listOf(1000L, 1001L, 2003L).map { id ->
+            Annonse().also {
+                it.id = id
+                it.uuid = UUID.randomUUID().toString()
+                it.orgnr = "900000000"
+                it.created = LocalDateTime.now()
+                it.updated = it.created
+            }
+        }
+
+        annonseRepository.saveAll(annonser)
+
+        var idPage = annonseRepository.findAllIds(PageRequest.of(0, 2, Sort.by("id")))
+        assertEquals(3, idPage.totalElements)
+        assertEquals(1000L, idPage.content[0])
+        assertEquals(1001L, idPage.content[1])
+
+        idPage = annonseRepository.findAllIds(idPage.nextPageable())
+        assertEquals(2003L, idPage.content[0])
     }
 
 }
