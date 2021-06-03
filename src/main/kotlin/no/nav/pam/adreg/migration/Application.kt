@@ -2,10 +2,16 @@ package no.nav.pam.adreg.migration
 
 import no.nav.pam.adreg.migration.annonse.Annonse
 import no.nav.pam.adreg.migration.annonse.AnnonseStorageService
+import no.nav.pam.adreg.migration.replication.AnnonseReplicationService
+import no.nav.pam.adreg.migration.replication.AnnonseReplicationTask
+import no.nav.pam.feed.taskscheduler.FeedTaskService
 import org.springframework.boot.ApplicationArguments
 import org.springframework.boot.ApplicationRunner
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
+import org.springframework.context.ApplicationContext
+import org.springframework.context.ApplicationContextAware
+import org.springframework.context.ConfigurableApplicationContext
 import org.springframework.context.annotation.Profile
 import org.springframework.stereotype.Component
 import java.io.IOException
@@ -29,7 +35,7 @@ fun main(args: Array<String>) {
 	runApplication<Application>(*args)
 }
 
-fun waitForPort(host: String, port: Int): Boolean {
+private fun waitForPort(host: String, port: Int): Boolean {
 	for (attempt in IntRange(1, 10)) {
 		try {
 			Socket(InetAddress.getByName(host), port).use {
@@ -45,28 +51,28 @@ fun waitForPort(host: String, port: Int): Boolean {
 }
 
 @Component
-@Profile("dbtest")
-class DbTestingConfig(val aservice: AnnonseStorageService): ApplicationRunner {
+class OnePassMigrationRunner(
+	val feedTaskService: FeedTaskService,
+	val annonseReplicationService: AnnonseReplicationService
+): ApplicationRunner, ApplicationContextAware {
+
+	private lateinit var applicationContext: ApplicationContext
+
 	override fun run(args: ApplicationArguments?) {
+		if (args?.containsOption("onepass")?:false) {
 
-		var annonse = aservice.findById(1002)?: Annonse().apply { id = 1002; uuid = UUID.randomUUID().toString() }
+			val taskInstance = AnnonseReplicationTask(feedTaskService, annonseReplicationService)
 
-		annonse.apply {
-			toBeExported = false
-			overskrift = "En overskrift her"
-			arbeidsgiver = "Fisk og flesk AS"
-			updated = LocalDateTime.now()
-			created = LocalDateTime.now()
-			orgnr = "900000000"
+			taskInstance.executeUpdateBatch()
 
-			properties["foo"] = "bar"
-			properties["x"] = "some value"
+			taskInstance.executeDeleteBatch()
+
+			(applicationContext as ConfigurableApplicationContext).close()
 		}
+	}
 
-		annonse = aservice.save(annonse)
-
-		println("Saved a test annonse")
-		println(annonse)
+	override fun setApplicationContext(applicationContext: ApplicationContext) {
+		this.applicationContext = applicationContext
 	}
 
 }
