@@ -52,23 +52,28 @@ private fun waitForPort(host: String, port: Int): Boolean {
 
 @Component
 class OnePassMigrationRunner(
-	val feedTaskService: FeedTaskService,
-	val annonseReplicationService: AnnonseReplicationService
+	feedTaskService: FeedTaskService,
+	annonseReplicationService: AnnonseReplicationService
 ): ApplicationRunner, ApplicationContextAware {
 
 	private lateinit var applicationContext: ApplicationContext
 
+	private val taskInstance = AnnonseReplicationTask(feedTaskService, annonseReplicationService)
+
 	override fun run(args: ApplicationArguments?) {
-		if (args?.containsOption("onepass")?:false) {
-
-			val taskInstance = AnnonseReplicationTask(feedTaskService, annonseReplicationService)
-
-			taskInstance.executeUpdateBatch()
-
-			taskInstance.executeDeleteBatch()
-
-			(applicationContext as ConfigurableApplicationContext).close()
+		if (args?.containsOption("onepass") != true) {
+			return
 		}
+
+		if (args.containsOption("update")) {
+			taskInstance.executeUpdateBatch()
+		}
+
+		if (args.containsOption("delete")) {
+			taskInstance.executeDeleteBatch()
+		}
+
+		(applicationContext as ConfigurableApplicationContext).close()
 	}
 
 	override fun setApplicationContext(applicationContext: ApplicationContext) {
