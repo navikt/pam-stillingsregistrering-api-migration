@@ -19,30 +19,29 @@ Denne migreringen ble ferdigstilt 8. juni 2021.
 2. Migrerings-appen ble deployet direkte til GCP og satt opp med
    cloudsql-database via naisapp-manifest. Den har samme app-navn som
    on-prem-appen, for å lette issues med db-tilgang osv. når den ekte backend
-   senere skal ta over senere. Databasen populeres av nye Flyway-script i
+   skal ta over senere. Databasen populeres av nye Flyway-script i
    migrerings-appen.
 
 3. Et enkelt JSON-feed-API ble laget i appen on-prem, slik at denne appen lese
-   data-elementer (hoved-entity-aggregate) kontinuerlig. Samtidig lages et API
-   som viser diverse sjekksummer på dataene (tellinger av diverse slag), som
-   skal brukes til å verifisere at synk er 100%. Dette sjekksum-API-et er
-   tilgjengelig både i appen on-prem og i GCP, for å kunne enkelt sammenlikne.
-   (Kunne også benyttet kafka for replikering, men siden denne appen ikke har
-   noe Kafka fra før var feed enkleste veien til mål.)
+   data-elementer (hoved-entity-aggregate) kontinuerlig. Feeden er basert på et
+   updated-timestamp på root entity og filter + sortering på dette feltet.
+   Samtidig lages et API som viser diverse sjekksummer på dataene (tellinger av
+   diverse slag), som skal brukes til å verifisere at synk er 100%. Dette
+   sjekksum-API-et er tilgjengelig både i appen on-prem og i GCP, for å kunne
+   enkelt sammenlikne. (Kunne også benyttet kafka for replikering, men siden
+   denne appen ikke har noe Kafka fra før var feed enkleste veien til mål.)
    
 3. Migreringsappen leser kontinuerlig en JSON-feed med data-elementer (annonser)
    fra appen on-prem og replikrer alle endringer (nye/oppdaterte) til ny lagring
-   i GCP (PostgreSQL). Feeden er basert på et updated-timestamp på root entity
-   og filter + sortering på dette feltet. App on-prem er satt opp med
-   nais.io-ingress for å bli nåbar fra GCP internt. På dette tidspunktet handler
-   det om å fikse bugs med replikering og sikre at data synkes 100% korrekt hele
-   tiden.
+   i GCP (PostgreSQL). App on-prem er satt opp med nais.io-ingress for å bli
+   nåbar fra GCP internt. På dette tidspunktet handler det om å fikse bugs med
+   replikering og sikre at data synkes 100% korrekt hele tiden.
    
    For å oppdage slettede elementer gjør migrerings-appen periodevis en
-   gjennomgang av alle lagrede annonser og slår opp i et API hos on-prem-appen
-   for å finne ut hvilke id-er som er slettet, for deretter å synke de samme
-   slettingene til lokalt repo. (Slettinger er ikke direkte representert i
-   JSON-feeden.)
+   gjennomgang av alle replikerte annonser og slår opp i et API hos
+   on-prem-appen for å finne ut hvilke id-er som er slettet, for deretter å
+   synke de samme slettingene til lokalt repo. (Slettinger er ikke direkte
+   representert i JSON-feeden.)
    
 4. En gcp-branch ble opprettet i hoved-appen on-prem
    (`pam-stillingsregistrering-api`). I denne branchen gjøres alle tilpasninger
@@ -106,7 +105,7 @@ Denne migreringen ble ferdigstilt 8. juni 2021.
 ## Generelt om migrering av frontend
 
 Frontend-appen
-([pam-stillingsregistrering](https://github.com/navikt/pam-stillingsregistrering)
+[pam-stillingsregistrering](https://github.com/navikt/pam-stillingsregistrering)
 er vesentlig enklere å migrere, og alt rundt denne kan gjøres klart på forhånd.
 Gcp-branch ble opprettet i kodebasen, og Github workflows i denne branchen
 justert for deploy ut til GCP, med nytt naisapp-manifest og tilpassede
@@ -115,10 +114,19 @@ ingresser, etc.
    
 ## Kjøre lokalt
 
-Ikke så aktuelt, denne er mest ofr 
+Ikke veldig aktuelt lenger. Dette ligger her mest for å kunne se tilbake på kode
+og README.
 
-Krever at flere miljøvariabler er satt på forhånd. Se
+Appen krever at flere miljøvariabler er satt på forhånd. Se
 `src/main/application.yml` and `.nais/nais.yaml` for detaljer.
 
     mvn clean install
-    java -jar target/migration-*.jar --onepass --update
+        
+Manuell kjøring fra som kommandolinje-app:
+
+    java -jar target/migration-*.jar --onepass --update --delete
+    
+    
+Eller for kontinuerlig replikering (kjører som egen app):
+
+    java -jar target/migration-*.jar --migration.scheduler.enabled=true
