@@ -5,7 +5,7 @@ Migreringsapplikasjon for backend
 fra on-prem-nais til GCP-nais. (Selvbetjent registrering av stillingsannonser på
 arbeidsplassen.nav.no/stillingsregistrering).
 
-Denne migreringen ble ferdigstilt 8. juni 2021.
+Denne migreringen ble ferdigstilt 8. juni 2021 og dette repository ble arkivert 18.6.2021.
 
 
 ## Beskrivelse av migrering i steg
